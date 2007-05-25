@@ -1,0 +1,35 @@
+--- 
+abstract: An asynchronous(POE) HTTP framework for building web applications.
+author: Marlon Bailey <mbailey at cpan.org>
+build_requires: 
+  POE::Component::Server::SimpleHTTP: 1.23
+  Test::More: 0.64
+distribution_type: module
+generated_by: Module::Install version 0.650
+license: perl
+meta-spec: 
+  url: http://module-build.sourceforge.net/META-spec-v1.3.html
+  version: 1.3
+name: POE-Component-WebApp
+no_index: 
+  directory: 
+    - inc
+    - t
+requires: 
+  Class::Accessor::Fast: 0
+  Class::Inspector: 1.16
+  Devel::Caller: 0.11
+  Devel::InnerPackage: 0.3
+  File::Find: 0
+  HTTP::Request::Params: 0
+  HTTP::Status: 0
+  Module::Info::File: 0.11
+  Module::Pluggable::Dependency: 0.0.3
+  POE: 0.9989
+  POE::Filter::Reference: 1.2025
+  POE::Wheel::Run: 1.2179
+  Scalar::Util: 0
+  Text::TabularDisplay: 1.22
+  URI: 0
+  attributes: 0
+version: 0.01_01

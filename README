@@ -1,0 +1,19 @@
+POE::Component::WebApp
+===============================
+ABOUT THIS MODULE
+
+POE::Component::WebApp - An asynchronous(POE) HTTP framework for building web applications.
+
+INSTALLATION
+
+To install this module type the following:
+
+   perl Makefile.PL
+   make
+   make test
+   make install
+
+MORE INFO
+
+	# After installing:
+	perldoc POE::Component::WebApp

@@ -1,0 +1,25 @@
+TODO:
+- Complete postback/callback work on deferred result objects.
+- Hook points in Dispatcher
+- Hook points in Context.
+- Recursion checks in Dispatcher.
+- Authentication and Authorization objects are passed in seperately
+- Look into adding C3 MRO
+- Plugins and configs are passed in as hash ref with structure
+- {
+    'PLUGIN_NAME1' => { config => data },
+    'PLUGIN_NAME2' => { config => data },
+  }
+- Plugin config { must_pass => 1/0, async => 1/0, attach_to => 'context/dispatcher', provides => []}
+- initialize() -> Web App Plugin initialization
+
+[ Dispatcher Hooks ]
+- before get_handler
+- after get_handler
+- before dispatch
+- after dispatch
+[ Context Hooks ]
+- before finalize
+- after finalize
+- before output
+- after output
