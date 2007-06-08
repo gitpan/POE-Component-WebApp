@@ -187,7 +187,6 @@ sub _check_coderef
 sub reap_forked_action
 {
 ### May want to do something with this at a later date
-    #warn "REAPER\n";
 }
 
 

@@ -12,7 +12,7 @@ sub index : Exposed
     $class->c->finalize();
 }
 
-sub hot_thing : Exposed('/dngortest/dngorish/hotness')
+sub hot_thing : Exposed('/dngorish/hotness')
 {
     my ($class, $args) = @_;
     
@@ -21,7 +21,31 @@ sub hot_thing : Exposed('/dngortest/dngorish/hotness')
     $class->c->finalize();
 }
 
-sub hot_redirect : Exposed('/dngortest/dngorish/redirect')
+sub param_parse : Exposed('/dngortest/dngorish/paramparse')
+{
+    my ($class, $args) = @_;
+    my $params = $class->c->params;
+    my $content;
+    while( my ($key, $value) = each %$params)
+    {
+        if( ref $value)
+        {
+            for (@$value)
+            {
+                $content .= "key: $key, value: $_.";
+            }
+        }
+        else
+        {
+            $content .= "key: $key, value: $value.";
+        }
+    }
+    $class->c->resp->content($content);
+    $class->c->resp->code(200);
+    $class->c->finalize();
+}
+
+sub hot_redirect : Exposed('/dngorish/redirect')
 {
     my ($class, $args) = @_;
     $class->c->resp->content('I am going to redirect.');
@@ -29,7 +53,7 @@ sub hot_redirect : Exposed('/dngortest/dngorish/redirect')
     $class->c->finalize();
 }
 
-sub imdirected  : Exposed('/dngortest/dngorish/imdirected')
+sub imdirected  : Exposed('/dngorish/imdirected')
 {
     my ($class) = @_;
     my $content = $class->c->resp->content;
@@ -41,7 +65,7 @@ sub testargforward : Exposed
 {
     my ($class) = @_;
     my $content = $class->c->resp->content;
-    $class->c->sf('/dngortest/index', [qw/arg3 arg4/]);
+    $class->c->sf('/index', [qw/arg3 arg4/]);
 }
 
 sub hotness : Exposed('hello')
@@ -57,22 +81,17 @@ sub hotness : Exposed('hello')
 sub asyncfork : Exposed
 {
     my ($class, $args) = @_;
-### Make sure everything in root namespace will give us /method
-### aswell as /dngortest/method
-    my $r1 = $class->c->af('/dngortest/dngorish/spin', { postbacks => ['/dngortest/postback1'],
-                                                callbacks => [],
-                                                err_backs => [],
-                                              }
+    my $r1 = $class->c->af('/dngorish/spin', undef, { postbacks => ['/postback1'],
+                                                                callbacks => ['/postback2'],
+                                                                err_backs => [],
+                                                              }
                           );
-    my $r2 = $class->c->af('/dngortest/dngorish/spin1');
-    my $r3 = $class->c->af('/dngortest/dngorish/spin2');
+    my $r2 = $class->c->af('/dngorish/spin1');
+    my $r3 = $class->c->af('/dngorish/spin2');
     $class->c->r_wait($r1, $r2, $r3);
-    #$class->c->r_wait($r2, $r3);
     $class->c->resp->content('This should come last.  ' . $r1->value->[0] . ' ' . $r2->value->[0] . ' ' . $r3->value->[0]);
-    #$class->c->resp->content('This should come last.  ');
     $class->c->resp->code(200);
     $class->c->finalize();
-    #return ('something','someone');
 }
 
 sub spin : Async('Fork')

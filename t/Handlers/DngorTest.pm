@@ -19,7 +19,7 @@ sub something : Exposed
     my ($class, $args) = @_;
 ### Make sure everything in root namespace will give us /method
 ### aswell as /dngortest/method
-    my $r1 = $class->c->sf('/dngortest/add_these', [ 1,2,3 ]);
+    my $r1 = $class->c->sf('/add_these', [ 1,2,3 ]);
     $class->c->resp->content('This is coming from something, result was ' . (@{$r1->value})[0] . '.');
     $class->c->resp->code(200);
     $class->c->finalize();
@@ -53,13 +53,13 @@ sub async_forward : Exposed('/asyncforward')
     my ($class, $args) = @_;
 ### Make sure everything in root namespace will give us /method
 ### aswell as /dngortest/method
-    my $r1 = $class->c->af('/dngortest/spin', { postbacks => ['/dngortest/postback1'],
-                                                callbacks => [],
-                                                err_backs => [],
-                                              }
+    my $r1 = $class->c->af('/spin', undef, { postbacks => ['/postback1'],
+                                             callbacks => [],
+                                             err_backs => [],
+                                           }
                           );
-    my $r2 = $class->c->af('/dngortest/spin1');
-    my $r3 = $class->c->af('/dngortest/spin2');
+    my $r2 = $class->c->af('/spin1');
+    my $r3 = $class->c->af('/spin2');
     $class->c->r_wait($r1, $r2, $r3);
     $class->c->resp->content( $class->c->resp->content . '  This should come last.');
     $class->c->resp->code(200);
@@ -75,15 +75,15 @@ sub postback1
 sub postback2
 {
     my ($class, $args) = @_;
-    warn "we are here in POSTBACK ONE\n";
+    warn "we are here in POSTBACK TWO\n";
 }
 
 sub testforward : Exposed
 {
     my ($class, $args) = @_;
-    my $r1 = $class->c->af('/dngortest/spin', [1,2,3]);
-    my $r2 = $class->c->af('/dngortest/spin1');
-    my $r3 = $class->c->af('/dngortest/spin2');
+    my $r1 = $class->c->af('/spin', [1,2,3]);
+    my $r2 = $class->c->af('/spin1');
+    my $r3 = $class->c->af('/spin2');
     $class->c->r_wait($r1, $r2, $r3);
     $class->c->resp->code(200);
     $class->c->finalize();

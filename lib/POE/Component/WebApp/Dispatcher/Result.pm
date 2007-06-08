@@ -6,7 +6,6 @@ use base qw/Class::Accessor::Fast/;
 
 __PACKAGE__->mk_accessors(qw/has_error error value is_ready/);
 
-
 sub new
 {
     my $class = shift;
@@ -21,7 +20,6 @@ sub new
     bless $self, $class;
     return $self;
 }
-
 
 =pod
 

@@ -78,19 +78,43 @@ sub _register_dispatches
     }
 }
 
-sub namespace
+sub _colon_to_slash
 {
     my $class = shift;
+    return 
+        unless defined $class;
     $class =~ s|\::|/|g;
     return lc $class;
-} 
+}
+
+sub _processed_path
+{
+    my $options = shift;
+    my $debug = shift || 0;
+    my $con_class = _colon_to_slash( $options->{'class'} );
+    my $r_class = _colon_to_slash( $options->{'root_namespace'} );
+    
+    print "con_class: $con_class and rclass: $r_class method: $options->{'method'}"
+        if $debug;
+    $con_class =~ s|$r_class||
+        if defined $r_class;
+    print "con_class: $con_class\n"
+        if $debug;
+    
+    return $con_class;
+}
 
 sub _local_handler
 {
     my $options = shift;
-    my $path = "/$options->{'class'}/$options->{'method'}";
-    $path =~ s|::|/|g;
+    my $path = _processed_path( $options ) . lc "/$options->{'method'}";
     return $path;
+}
+
+sub _strip_root_namespace
+{
+    my ($root, $class_name) = @_;
+    $root = _colon_to_slash( $root );
 }
 
 sub _path_handler
@@ -101,29 +125,29 @@ sub _path_handler
     
     if( $options->{'args'} )
     {
-        $path = $options->{'args'};
-        
-        if( !$path )
+        my $user_path = $options->{'args'};
+        if($user_path =~ m|^/| )
         {
-            $path = _local_handler( $options );
-        } 
-        elsif( $path !~ m|^/| )
-        {
-            $path = '/' . $options->{'class'}->namespace . '/' . $path;
+            $path = $user_path;
         }
-        
+        else
+        {
+            $path = _processed_path( $options ) . '/' . "$user_path";
+            $path = "/$path"
+                unless $path =~ m|^/|;
+        }
     }
     else
     {
         if( $options->{'method'} eq 'index' )
         {
-            $path = "/$options->{'class'}";
-            $path =~ s|::|/|g;
+            $path = _processed_path( $options );
+            $path = "/$path"
+                unless $path =~ m|^/|;
         }
         else #### Standard expose
         {
-            $path = "/$options->{'class'}/$options->{'method'}";
-            $path =~ s|::|/|g;
+            $path = _processed_path( $options ) . "/$options->{'method'}";
         }
     }
     
@@ -133,6 +157,7 @@ sub _path_handler
 sub _add_to_table
 {
     my ($options, $dispatch_table, $path, $type) = @_;
+    #warn "ADD PATH: $path\n";
     
     my $d_path = lc( URI->new( $path, 'http' )->canonical->path );
     
@@ -143,18 +168,18 @@ sub _add_to_table
                                    }; 
                    
 ### Do I need to add another for the root namespace
-    if( $type eq 'exposed' 
-        and $options->{'root_namespace'}
-        and $options->{'class'} eq $options->{'root_namespace'} )
-    {
-        my $root_namespace = lc $options->{'root_namespace'};
-        $d_path =~ s|^/$root_namespace/?|/|;
-        $dispatch_table->{ $type }
-                       ->{ $d_path } = { code => $options->{'code_ref'}, 
-                                         method => $options->{'method'}, 
-                                         class => $options->{'class'},
-                                       }; 
-    }
+    #if( $type eq 'exposed' 
+        #and $options->{'root_namespace'}
+        #and $options->{'class'} eq $options->{'root_namespace'} )
+    #{
+        ##my $root_namespace = lc $options->{'root_namespace'};
+        ##$d_path =~ s|^/$root_namespace/?|/|;
+        ##$dispatch_table->{ $type }
+                       ##->{ $d_path } = { code => $options->{'code_ref'}, 
+                                         ##method => $options->{'method'}, 
+                                         ##class => $options->{'class'},
+                                       ##}; 
+    #}
 }
 
 1;

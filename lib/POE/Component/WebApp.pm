@@ -15,7 +15,7 @@ use constant DEFAULT_METHOD => 'called_or_default';
 __PACKAGE__->mk_accessors(qw/module_dir dmo root_namespace 
                              restful session_id adapter my_address/);
 
-our $VERSION = '0.01_01';
+our $VERSION = '0.01_02';
 
 sub new
 {
@@ -51,21 +51,19 @@ sub new
     )->ID;
     
 ### Create and assign dispatcher session and start up processing
+    my $d_class = "POE::Component::WebApp::Dispatcher::$self->{'dispatch_type'}";
+    warn "Loading app with dispatcher: $d_class\n";
+    
+    eval "require $d_class;" 
+        or die "Could not load dispatcher class $d_class because $@";
+        
     eval
     {
-        my $d_class = "POE::Component::WebApp::Dispatcher::$self->{'dispatch_type'}";
-        warn "Loading app with dispatcher: $d_class\n";
-        eval "require $d_class;";
-        die "Could not load dispatcher class $d_class because $@"
-            if $@;
-        eval
-        {
-             $self->{'dispatcher'} = $d_class->new( %options );
-        };
-        
-        die "Could not instantiate dispatcher class $d_class because $@"
-            if $@;
+         $self->{'dispatcher'} = $d_class->new( %options );
     };
+    
+    die "Could not instantiate dispatcher class $d_class because $@"
+        if $@;
     
 ### Initialize plugins
     $self->init_plugins( $self->{'config'}->{'plugins'} );

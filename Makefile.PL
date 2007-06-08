@@ -15,6 +15,7 @@ requires        'URI'                   => '0';
 requires        'File::Find'            => '0';
 requires        'Class::Inspector'      => '1.16';
 requires        'HTTP::Status'          => '0';
+requires        'HTTP::Request'         => '0';
 requires        'HTTP::Request::Params' => '0';
 requires        'Class::Accessor::Fast' => '0';
 requires        'Scalar::Util' => '0';
@@ -28,6 +29,7 @@ requires        'POE::Filter::Reference' => '1.2025';
 
 build_requires  'Test::More'        => '0.64';
 build_requires  'POE::Component::Server::SimpleHTTP' => '1.23';
+build_requires  'HTTP::Request::Common' => '0';
 
 auto_install;
 WriteAll;

@@ -84,9 +84,12 @@ sub handle_error
 sub handle_io_error
 {
     my $self = shift;
-    my $error = $_[ARG0];
+    return 
+        if ($_[ARG0] eq 'read'
+           and ($_[ARG1] == 0));
+           
     my $addy = refaddr $self;
-    warn "IOERR for method: $self->{'method_name'} in module: $self->{'module'} with addy: $addy, error is: $error\n"
+    warn "IOERR for method: $self->{'method_name'} in module: $self->{'module'} with addy: $addy, error is: $_[ARG0] $_[ARG1] $_[ARG2]\n"
         if $Debug;
 }
 
@@ -107,6 +110,8 @@ sub cleanup
 ### Destroy the wheel
     my $sess_heap = POE::Kernel->get_active_session->get_heap;
     delete $sess_heap->{'action_$addy'};
+    $self->process_result
+        if $self->{'result'};
 }
 
 1;

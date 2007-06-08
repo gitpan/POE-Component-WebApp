@@ -35,11 +35,13 @@ sub _initialize
     
     $dispatch_table{ $addy } = {};
     
+    #use Data::Dumper;
 ### Load modules
     find({ wanted => sub { _load_module( $dispatch_table{ $addy }, $self->{'root_namespace'} ) }, 
            no_chdir => 1 }, 
            $self->{'module_dir'},
         );
+    #print Dumper( \%dispatch_table );
 }
 
 sub _load_module

@@ -23,6 +23,7 @@ lib/POE/Component/WebApp/Dispatcher/Result/Deferred.pm
 lib/POE/Component/WebApp/Dispatcher/Std.pm
 lib/POE/Component/WebApp/Plugin.pm
 lib/POE/Component/WebApp/Plugin/TT.pm
+lib/POE/Component/WebApp/Tool.pm
 lib/POE/Component/WebApp/Util.pm
 lib/POE/Component/WebApp/Util/Attr.pm
 Makefile.PL

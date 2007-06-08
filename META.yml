@@ -2,6 +2,7 @@
 abstract: An asynchronous(POE) HTTP framework for building web applications.
 author: Marlon Bailey <mbailey at cpan.org>
 build_requires: 
+  HTTP::Request::Common: 0
   POE::Component::Server::SimpleHTTP: 1.23
   Test::More: 0.64
 distribution_type: module
@@ -21,6 +22,7 @@ requires:
   Devel::Caller: 0.11
   Devel::InnerPackage: 0.3
   File::Find: 0
+  HTTP::Request: 0
   HTTP::Request::Params: 0
   HTTP::Status: 0
   Module::Info::File: 0.11
@@ -32,4 +34,4 @@ requires:
   Text::TabularDisplay: 1.22
   URI: 0
   attributes: 0
-version: 0.01_01
+version: 0.01_02
